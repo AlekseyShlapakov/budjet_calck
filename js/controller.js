@@ -26,9 +26,20 @@ var controller = (function(budgetCtr, uiCtr){
             uiCtr.clearFields();
             generateTestData.init();
 
+            // Считаем бюджет
+            updateBudget();
+
         }
 
         
+    }
+
+    // Функция для пересчета бюджета
+    function updateBudget(){
+        // Рассчитываем бюджет в модели
+        budgetCtr.calculateBudget();
+
+
     }
 
     return {
