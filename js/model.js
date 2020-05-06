@@ -17,7 +17,7 @@ var modelController = (function () {
     var newItem, ID;
 
     // Генерируем ID
-    if (data.allItems[type] > 0) {
+    if (data.allItems[type].length > 0) {
       var lastIndex = data.allItems[type].length - 1;
       ID = data.allItems[type][lastIndex].id + 1;
     } else {
@@ -36,6 +36,27 @@ var modelController = (function () {
 
     // Возвращаем новый объект
     return newItem;
+  }
+
+  function deleteItem(type, id){
+
+    // Находим запись по id с доходами и расходами
+    var ids = data.allItems[type].map(function(item){
+    
+        return item.id;
+    });
+
+    console.log("deleteItem -> ids", ids);
+
+    // Находим индекс с записями
+    index = ids.indexOf(id);
+    console.log("deleteItem -> index", index);
+
+    // Удаляем найденную запись из массива по индексу
+    if ( index !== -1 ){
+        data.allItems[type].splice(index, 1);
+    }
+
   }
 
   // Функция, возвращающая сумму всех доходов или расходов
@@ -83,23 +104,24 @@ var modelController = (function () {
   var data = {
     allItems: {
       inc: [],
-      exp: [],
+      exp: []
     },
 
     totals: {
       inc: 0,
-      exp: 0,
+      exp: 0
     },
     budget: 0,
-    percentage: -1,
+    percentage: -1
   };
 
   return {
     addItem: addItem,
     getBudget: getBudget,
+    deleteItem: deleteItem,
     calculateBudget: calculateBudget,
     test: function () {
       console.log(data);
-    },
-  };
+    }
+  }
 })();

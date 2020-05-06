@@ -2,16 +2,17 @@ var controller = (function (budgetCtr, uiCtr) {
   var setUpEventListeners = function () {
     var DOM = uiCtr.getDomStrings();
     document.querySelector(DOM.form).addEventListener("submit", ctrAddItem);
+
+    // Прослушка клика по таблице с доходами и расходами
+    document.querySelector(DOM.budgetTable).addEventListener("click", ctrDeleteItem)
   };
 
   // Функция, которая срабатывает при отправке формы
   function ctrAddItem(event) {
     event.preventDefault();
-    console.log("Fired!");
 
     // Получаем данные из формы
     var input = uiCtr.getInput();
-    console.log("ctrAddItem -> input", input);
 
     // Проверка на пустые поля
     if (input.description !== "" && !isNaN(input.value) && input.value > 0) {
@@ -23,7 +24,7 @@ var controller = (function (budgetCtr, uiCtr) {
       );
       budgetCtr.test();
 
-      // Добавляем запись в UI
+      // Добавляем "запись" в UI
       uiCtr.renderListItem(newItem, input.type);
       uiCtr.clearFields();
       generateTestData.init();
@@ -31,6 +32,35 @@ var controller = (function (budgetCtr, uiCtr) {
       // Считаем бюджет
       updateBudget();
     
+    }
+  }
+
+  function ctrDeleteItem(event){
+    var itemID, splitID, type, ID;
+
+    if (event.target.closest(".item__remove")){
+
+        // Находим ID записи которую надо удалить
+        itemID = event.target.closest("li.budget-list__item").id;
+        console.log("ctrDeleteItem -> itemID", itemID);
+
+        splitID = itemID.split("-");
+        type = splitID[0];
+        ID = parseInt(splitID[1]);
+
+        console.log("ctrDeleteItem -> ID", ID)
+        console.log("ctrDeleteItem -> type", type);
+
+        // Удаляем запись из модели
+        budgetCtr.deleteItem(type, ID);
+
+        // Удаляем записи из шаблона
+        uiCtr.deleteListItem(itemID);
+
+        // Считаем бюджет
+        updateBudget();
+    
+
     }
   }
 
@@ -57,7 +87,7 @@ var controller = (function (budgetCtr, uiCtr) {
         totalExp: 0,
         percentage: 0
     });
-    },
+    }
   };
 })(modelController, viewController);
 
