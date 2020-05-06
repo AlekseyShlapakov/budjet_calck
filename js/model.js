@@ -1,100 +1,94 @@
-var modelController = (function(){
+var modelController = (function () {
+  // Конструктор под доходы
+  var Income = function (id, description, value) {
+    this.id = id;
+    this.description = description;
+    this.value = value;
+  };
 
-    // Конструктор под доходы
-    var Income = function(id, description, value){
-        this.id = id;
-        this.description = description;
-        this.value = value;
+  // Конструктор под расходы
+  var Expense = function (id, description, value) {
+    this.id = id;
+    this.description = description;
+    this.value = value;
+  };
+
+  function addItem(type, desc, val) {
+    var newItem, ID;
+
+    // Генерируем ID
+    if (data.allItems[type] > 0) {
+      var lastIndex = data.allItems[type].length - 1;
+      ID = data.allItems[type][lastIndex].id + 1;
+    } else {
+      ID = 0;
     }
 
-    // Конструктор под расходы
-    var Expense = function(id, description, value){
-        this.id = id;
-        this.description = description;
-        this.value = value;
+    // В зависимости от типа записи используем соотв конструктор и создаем тип записи
+    if (type === "inc") {
+      newItem = new Income(ID, desc, parseFloat(val));
+    } else if (type === "exp") {
+      newItem = new Expense(ID, desc, parseFloat(val));
     }
 
-    function addItem(type, desc, val){
+    // Записываем "запись"/ объект в структуру данных в переменную data
+    data.allItems[type].push(newItem);
 
-        var newItem, ID;
+    // Возвращаем новый объект
+    return newItem;
+  }
 
-        // Генерируем ID
-        if(data.allItems[type] > 0){
-            var lastIndex = data.allItems[type].length - 1;
-            ID = data.allItems[type][lastIndex].id + 1;
-        } else {
-            ID = 0;
-        }
+  // Функция, возвращающая сумму всех доходов или расходов
+  function calculateTotalSum(type) {
+    sum = 0;
 
-        // В зависимости от типа записи используем соотв конструктор и создаем тип записи
-        if( type === "inc" ){
-            newItem = new Income(ID, desc, parseFloat(val));
-        } else if ( type === "exp" ){
-            newItem = new Expense(ID, desc, parseFloat(val));
-        }
+    data.allItems[type].forEach(function (item) {
+      sum = sum + item.value;
+    });
 
-        // Записываем "запись"/ объект в структуру данных в переменную data
-        data.allItems[type].push(newItem);
+    return sum;
+  }
 
-        // Возвращаем новый объект
-        return newItem;
+  // Функция для рассчета бюджета
+  function calculateBudget() {
+    // Считаем все доходы
+    data.totals.inc = calculateTotalSum("inc");
+    console.log("calculateBudget -> data.totals.inc", data.totals.inc);
+
+    // Считаем все расходы
+    data.totals.exp = calculateTotalSum("exp");
+    console.log("calculateBudget -> data.totals.exp", data.totals.exp);
+
+    // Делаем расчет общего бюджета
+    data.budget = data.totals.inc - data.totals.exp;
+
+    // Считаем процент для расходов
+    if (data.totals.inc > 0) {
+      data.percentage = Math.round((data.totals.exp / data.totals.inc) * 100);
+    } else {
+      data.percentage = -1;
     }
+  }
 
-    // Функция, возвращающая сумму всех доходов или расходов
-    function calculateTotalSum(type){
-        sum = 0;
+  var data = {
+    allItems: {
+      inc: [],
+      exp: [],
+    },
 
-        data.allItems[type].forEach(function(item){
-            sum = sum + item.value;
-        });
+    totals: {
+      inc: 0,
+      exp: 0,
+    },
+    budget: 0,
+    percentage: -1,
+  };
 
-        return sum;
-    }
-
-    // Функция для рассчета бюджета
-    function calculateBudget(){
-        // Считаем все доходы
-        data.totals.inc = calculateTotalSum("inc");
-        console.log("calculateBudget -> data.totals.inc", data.totals.inc)
-
-        // Считаем все расходы
-        data.totals.exp = calculateTotalSum("exp");
-        console.log("calculateBudget -> data.totals.exp", data.totals.exp)
-
-        // Делаем расчет общего бюджета
-        data.budget = data.totals.inc - data.totals.exp;
-
-        // Считаем процент для расходов
-        if(data.totals.inc > 0){
-            data.percentage = Math.round((data.totals.exp / data.totals.inc) * 100);
-        } else {
-            data.percentage = -1;
-        }
-        
-
-    }
-
-    var data = {
-        allItems: {
-            inc: [],
-            exp: []
-        },
-
-        totals: {
-            inc: 0,
-            exp: 0
-        },
-        budget: 0,
-        percentage: -1
-    }
-
-    return {
-        addItem: addItem,
-        calculateBudget: calculateBudget,
-        test: function(){
-            console.log(data);
-        } 
-    }
-
-
+  return {
+    addItem: addItem,
+    calculateBudget: calculateBudget,
+    test: function () {
+      console.log(data);
+    },
+  };
 })();
