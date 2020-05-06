@@ -70,6 +70,16 @@ var modelController = (function () {
     }
   }
 
+    //Функция, которая будет возвращать наружу данные по бюджету
+    function getBudget(){
+        return {
+            budget: data.budget,
+            totalInc: data.totals.inc,
+            totalExp: data.totals.exp,
+            percentage: data.percentage
+        }
+    }   
+
   var data = {
     allItems: {
       inc: [],
@@ -86,6 +96,7 @@ var modelController = (function () {
 
   return {
     addItem: addItem,
+    getBudget: getBudget,
     calculateBudget: calculateBudget,
     test: function () {
       console.log(data);

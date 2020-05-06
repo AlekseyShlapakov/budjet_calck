@@ -38,12 +38,25 @@ var controller = (function (budgetCtr, uiCtr) {
   function updateBudget() {
     // Рассчитываем бюджет в модели
     budgetCtr.calculateBudget();
+
+    // Получаем рассчитанный бюджет из модели
+    budgetObj = budgetCtr.getBudget();
+    console.log("updateBudget -> budgetObj", budgetObj)
+
+    // Отображаем бюджет в шаблоне
+    uiCtr.updateBudget(budgetObj);
   }
 
   return {
     init: function () {
       console.log("App started!");
       setUpEventListeners();
+      uiCtr.updateBudget({
+        budget: 0,
+        totalInc: 0,
+        totalExp: 0,
+        percentage: 0
+    });
     },
   };
 })(modelController, viewController);

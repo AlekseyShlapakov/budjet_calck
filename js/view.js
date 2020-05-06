@@ -6,7 +6,12 @@ var viewController = (function(){
         inputValue: "#input__value",
         form: "#budget-form",
         incomContainer: "#income__list",
-        expenseContainer: "#expenses__list"
+        expenseContainer: "#expenses__list",
+        budgetLabel: "#budget-value",
+        incomeLabel: "#income-label",
+        expensesLabel: "#expense-label",
+        expensesPercentLabel: "#expense-parsent-label"
+
     }
 
     function getInput(){
@@ -77,10 +82,24 @@ var viewController = (function(){
 
     }
 
+    function updateBudget(obj){
+        document.querySelector(DomStrings.budgetLabel).textContent = obj.budget;
+        document.querySelector(DomStrings.incomeLabel).textContent = obj.totalInc;
+        document.querySelector(DomStrings.expensesLabel).textContent = obj.totalExp;
+
+        if( obj.percentage > 0 ){
+            document.querySelector(DomStrings.expensesPercentLabel).textContent = obj.percentage;
+        } else{
+            document.querySelector(DomStrings.expensesPercentLabel).textContent = "--";
+        }
+
+    }
+
     return {
         getInput: getInput,
         clearFields: clearFields,
         renderListItem: renderListItem,
+        updateBudget: updateBudget,
         getDomStrings: function(){
             return DomStrings;
         }
