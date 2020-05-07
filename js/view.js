@@ -11,6 +11,8 @@ var viewController = (function () {
     expensesLabel: "#expense-label",
     expensesPercentLabel: "#expense-parsent-label",
     budgetTable: "#budget-table",
+    monthLabel: "#month",
+    yearLabel: "#year"
   };
 
   function getInput() {
@@ -197,15 +199,37 @@ var viewController = (function () {
     });
   }
 
+  function displayMonth(){
+      var now, year, month, monthArr;
+
+      now = new Date();
+      year = now.getFullYear(); // 2020
+      month = now.getMonth(); // Апрель => 3(Индекс месяца)
+
+      monthArr = [
+          'Январь', 'Февраль', 'Март',
+          'Апрель', 'Май', 'Июнь',
+          'Июль', 'Август', 'Сентябрь',
+          'Октябрь', 'Ноябрь', 'Декабрь'
+        ];
+      
+
+      month = monthArr[month];
+
+      document.querySelector(DomStrings.monthLabel).innerText = month;
+      document.querySelector(DomStrings.yearLabel).innerText = year;
+  }
+
   return {
     getInput: getInput,
     clearFields: clearFields,
     renderListItem: renderListItem,
     deleteListItem: deleteListItem,
     updateItemPercentage: updateItemPercentage,
+    displayMonth: displayMonth,
     updateBudget: updateBudget,
     getDomStrings: function () {
       return DomStrings;
-    },
+    }
   };
 })();
