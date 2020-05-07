@@ -11,7 +11,22 @@ var modelController = (function () {
     this.id = id;
     this.description = description;
     this.value = value;
+    this.percentage = -1;
   };
+
+//   Метод, который берет общий бюджет и рассчитывать процент расхода
+  Expense.prototype.calcPercentage = function(totalIncome){
+    if( totalIncome > 0 ){
+        this.percentage = Math.round((this.value / totalIncome) * 100);
+    } else {
+        this.percentage = -1;
+    }
+  }
+
+    // Метод, который возвращает значение процента расходов
+    Expense.prototype.getPercentage = function(){
+        return this.percentage;
+    }
 
   function addItem(type, desc, val) {
     var newItem, ID;
@@ -101,6 +116,23 @@ var modelController = (function () {
         }
     }   
 
+    // Функция, которая запускает пересчет процентов
+    function calculatePercentage(){
+        data.allItems.exp.forEach(function(item){
+            item.calcPercentage(data.totals.inc);
+        });
+    }
+
+    // Функция которая вовращает список ID и список процентов, 
+    // кот. нужно обновить во view (в массиве)
+    function getAllIdsAndPercentages(){
+        var allPerc = data.allItems.exp.map(function(item){
+            return [item.id, item.getPercentage()];
+        });
+
+        return allPerc;
+    }
+
   var data = {
     allItems: {
       inc: [],
@@ -119,6 +151,8 @@ var modelController = (function () {
     addItem: addItem,
     getBudget: getBudget,
     deleteItem: deleteItem,
+    calculatePercentage: calculatePercentage,
+    getAllIdsAndPercentages: getAllIdsAndPercentages,
     calculateBudget: calculateBudget,
     test: function () {
       console.log(data);
