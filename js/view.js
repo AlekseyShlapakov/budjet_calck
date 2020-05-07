@@ -49,7 +49,7 @@ var viewController = (function(){
                             <div class="item__amount">
                                 %value%
                                 <div class="item__badge">
-                                    <div class="badge badge--dark">
+                                    <div class="item__percent badge badge--dark">
                                         15%
                                     </div>
                                 </div>
@@ -100,11 +100,40 @@ var viewController = (function(){
         document.getElementById(itemID).remove();
     }
 
+    function updateItemPercentage(items){
+
+        items.forEach(function(item){
+        
+        // Вывод каждой записи массива во время прохода
+        console.log("updateItemPercentage -> item", item);
+
+        // Находим li, где лежат данные и далее блок с процентами по "item__percent"
+        var el = document.getElementById(`exp-${item[0]}`).querySelector(".item__percent");
+        console.log("updateItemPercentage -> el", el);
+
+        // Меняем в этом блоке текстовое содержимое
+        
+        if ( item[1] >= 0){
+            // Если есть, то показываем блок с процентами
+            el.parentElement.style.display = "block";
+
+            // Меняем контент внутрии бейджа с процентами
+            el.textContent = item[1] + "%";
+        } else {
+            // Если нет, то скрываем бейдж с процентами
+            el.parentElement.style.display = "none";
+        }
+
+        });
+
+    }
+
     return {
         getInput: getInput,
         clearFields: clearFields,
         renderListItem: renderListItem,
         deleteListItem: deleteListItem,
+        updateItemPercentage: updateItemPercentage,
         updateBudget: updateBudget,
         getDomStrings: function(){
             return DomStrings;
